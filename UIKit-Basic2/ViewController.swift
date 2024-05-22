@@ -21,9 +21,17 @@ class ViewController: UIViewController {
         imageView.addGestureRecognizer(gesture)
     }
     @objc func handleGesture(_ sender: UIPinchGestureRecognizer){
-        print("\(sender.scale)")
-        if let view = sender.view {
-            view.transform = view.transform.scaledBy(x: sender.scale, y: sender.scale)
+        guard let view = sender.view else { return }
+        // scale 범위 한정
+        let currentScale = sqrt(view.transform.a * view.transform.a + view.transform.c * view.transform.c)
+        if sender.scale < 1.0 {
+            if currentScale > 0.8 {
+                view.transform = view.transform.scaledBy(x: sender.scale, y: sender.scale)
+            }
+        } else {
+            if currentScale < 1.2 {
+                view.transform = view.transform.scaledBy(x: sender.scale, y: sender.scale)
+            }
         }
     }
 }
